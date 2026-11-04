@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="8.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1598"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="couriers01" custom_title="0" dock_id="3" table="4,10:maincouriers01"/><dock_state state="000000ff00000000fd00000001000000020000000000000000fc0100000003fb000000160064006f0063006b00420072006f00770073006500310100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500320100000000ffffffff0000000000000000fb000000160064006f0063006b00420072006f00770073006500330100000000ffffffff0000012e00ffffff000000000000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">DROP TABLE IF EXISTS orders01;
+DROP TABLE IF EXISTS couriers01;
+DROP TABLE IF EXISTS dishes01;
+PRAGMA foreign_keys = ON;
+CREATE TABLE dishes01 (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    category TEXT,
+    price REAL NOT NULL,
+    restaurant TEXT
+);
+INSERT INTO dishes01 (id, name, category, price, restaurant) VALUES
+(1, 'Панкейки з нутелою', 'випічка', 330, 'pancake cafe'),
+(2, 'Салат крабовий', 'українська кухня', 140, 'чілміл'),
+(3, 'Котлети з м’яса індика', 'корисна їжа', 246, 'Mama Tato'),
+(4, 'Біф мелт', 'сніданок', 501, 'HONEY'),
+(5, 'Круасан з лососем', 'сніданок', 402, 'HONEY'),
+(6, 'Локшина з креветками', 'азійська кухня', 369, 'chin chin'),
+(7, 'Англійський сніданок', 'італійська кухня', 289, 'паштет'),
+(8, 'THIS IS БІГ БІФ БУРГЕР', 'американська кухня', 625, 'THIS IS ПИВБАР');
+CREATE TABLE couriers01 (
+    id INTEGER PRIMARY KEY,
+    last_name TEXT NOT NULL,
+    first_name TEXT NOT NULL,
+    phone TEXT,
+    transport TEXT
+);
+INSERT INTO couriers01 (id, last_name, first_name, phone, transport) VALUES
+(1, 'Карпачов', 'Дмитро', '0998991391', NULL),
+(2, 'Костенко', 'Ліна', '0958928938', 'Велосипед'),
+(3, 'Мельник', 'Антон', '0671236941', 'Мотоцикл'),
+(4, 'Іванчук', 'Петро', '09901040011', 'Велосипед'),
+(5, 'Шевченко', 'Тарас', NULL, 'Велосипед'),
+(6, 'Петренко', 'Іван', '0981103799', NULL);
+CREATE TABLE orders01 (
+    id INTEGER PRIMARY KEY,
+    dish_id INTEGER NOT NULL,
+    courier_id INTEGER NOT NULL,
+    order_date TEXT NOT NULL,
+    address TEXT,
+    status TEXT,
+    FOREIGN KEY (dish_id) REFERENCES dishes01(id),
+    FOREIGN KEY (courier_id) REFERENCES couriers01(id)
+);
+INSERT INTO orders01 (id, dish_id, courier_id, order_date, address, status) VALUES
+(1, 1, 2, '2024-03-01', 'вул. Хрещатик, 1', 'доставлено'),
+(2, 3, 3, '2024-03-02', 'вул. Шевченка, 10', 'в дорозі'),
+(3, 5, 5, '2024-03-03', 'вул. Лесі Українки, 5', NULL),
+(4, 8, 6, '2024-03-04', 'вул. Сагайдачного, 22', 'скасовано'),
+(5, 2, 4, '2024-03-05', NULL, 'доставлено');
+
+--1 aaaaaa показало 4!!! колонки!!! а їх 5!!! колонок!!! одна колонка нулл тому її не порахували!!!!!!!!!!! в каунт(*) їх 5 але не можу разом показати ії бо видає помилку
+SELECT COUNT(status) FROM orders01;
+--2 
+SELECT AVG(price) AS avg_price_for_meals_is_this_is_how_i_can_write_an_explenation_question_mark FROM dishes01;
+SELECT SUM(price) AS sum_price FROM dishes01;
+--4
+SELECT
+    COUNT(name)   AS total_dishes,
+    AVG(price)   AS average_price,
+    MIN(price)   AS cheapest,
+    MAX(price)   AS pricier
+FROM dishes01;
+--5 вер прибрав все що не велосипед
+SELECT COUNT(last_name) FROM couriers01 WHERE transport = 'Велосипед';</sql><current_tab id="0"/></tab_sql></sqlb_project>
